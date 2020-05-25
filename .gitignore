@@ -1,1 +1,7 @@
 *.vscode
+
+*.__pycache__/*
+
+__pycache__/*
+
+database/__pycache__/*
