@@ -38,6 +38,7 @@ def add_group():
   body = request.form
   group = Group(**body).save()
   return Response(group, mimetype="application/json", status=200)
+
   # return { 'Group created.  Group Key:' key }, 200
 
 # @app.route('/groups', methods=['GET'])
@@ -50,17 +51,17 @@ def get_group(access_code):
   group = Group.objects.get(access_code=access_code)
   return group.access_code
 
-@socketIo.on('join')
-def on_join(data):
-  room = data['room']
-  join_room(room)
-  send("Welcome to the room", room=room)
+# @socketIo.on('join')
+# def on_join(data):
+#   room = data['room']
+#   join_room(room)
+#   send("Welcome to the room", room=room)
 
-@socketIo.on('message')
-def handleMessage(msg):
-  print(msg)
-  send(msg, namespace=f'/groups/{access_code}')
-  return None
+# @socketIo.on('message')
+# def handleMessage(msg):
+#   print(msg)
+#   send(msg, namespace=f'/groups/{access_code}')
+#   return None
 
 
 
