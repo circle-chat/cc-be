@@ -1,12 +1,34 @@
-from flask import Flask, request
+from database.mongodb import initialize_db
+from database.models import Group
+from flask import Flask, request, Response
 from flask_socketio import SocketIO, send, emit, join_room, leave_room, rooms
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-app.config['SECRET_KEY'] = 'teamawesome'
-app.debug = True
-app.host = 'localhost'
+# Connect the app to the MongoDB
+app.config['MONGODB_SETTINGS'] = {
+  'host': 'mongodb://localhost/cc-be'
+}
+
+initialize_db(app)
+
+def find_group(access_code):
+  if Group.objects(access_code= f"{access_code}"):
+    return True
+  else:
+    return False
+
+# app.config['SECRET_KEY'] = 'teamawesome'
+# app.debug = True
+# app.host = 'localhost'
+
+# Test group room route
+@app.route('/groups', methods=['POST'])
+def add_group():
+  body = request.form
+  group = Group(**body).save()
+  return Response(group, mimetype="application/json", status=200)
 
 
 # Send Message. Namespace is an example
@@ -16,10 +38,19 @@ def send_message(data):
   msg = data['message']
   # print(data['message'], room=room)
   send(msg, room=room)
-  
+
+# Join a group based on access_code
+@socketio.on('join_group')
+def group_join(data):
+  if find_group(data['access_code']):
+    room = data['access_code']
+    join_room(room)
+    send('Successfully Connected to Group', room=room)
+  else:
+    raise ConnectionRefusedError('Group Not Found')
 
 # Join a room. `on_join` expects a dictionary argument.
-@socketio.on('join')
+@socketio.on('join_room')
 def on_join(data):
   room = data['room']
   join_room(room)

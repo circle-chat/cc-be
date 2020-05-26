@@ -131,7 +131,12 @@ def test_can_find_group_by_access_code():
   assert first_check == True
   assert second_check == False
 
-
+def test_can_post_new_group():
+  flask_test_client = app.test_client()
+  params = {"access_code": "test101", "description": "test100"}
+  result = flask_test_client.post('/groups', data=params)
+  # breakpoint()
+  # assert result == ""
 
 if __name__ == 'app':
   socketio_test()
