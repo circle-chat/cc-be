@@ -1,4 +1,4 @@
-from app.app import app, socketio, find_group
+from app.app import app, socketio, find_group, Group, Connection
 
 def test_socketio_connection():
   flask_test_client = app.test_client()
@@ -105,6 +105,7 @@ def test_broadcast_message():
 
   assert client2_message == "Hello Everyone"
 
+
 def test_user_can_only_join_group_if_access_code_right():
   flask_test_client = app.test_client()
   socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
@@ -123,7 +124,6 @@ def test_user_can_only_join_group_if_access_code_right():
   # assert client2_message == "Group Not Found"
 
 
-
 def test_can_find_group_by_access_code():
   first_check = find_group('test2')
   second_check = find_group('sdfsdfsd')
@@ -131,12 +131,43 @@ def test_can_find_group_by_access_code():
   assert first_check == True
   assert second_check == False
 
+
 def test_can_post_new_group():
   flask_test_client = app.test_client()
-  params = {"access_code": "test101", "description": "test100"}
+  params = {"access_code": "test2", "description": "test2"}
   result = flask_test_client.post('/groups', data=params)
   # breakpoint()
   # assert result == ""
 
-if __name__ == 'app':
-  socketio_test()
+
+# todo: break this apart into multiple test cases
+def test_active_sockets():
+  Connection.objects.delete()
+  flask_test_client = app.test_client()
+  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client.emit('join_group', {'access_code': "test2"})
+  conn1 = Connection.objects.get(sid=socketio_test_client.sid)
+
+  assert len(Connection.objects) == 1
+  assert conn1.sid == socketio_test_client.sid
+
+  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client2.emit('join_group', {'access_code': "test2"})
+  conn2 = Connection.objects.get(sid=socketio_test_client2.sid)
+
+  assert len(Connection.objects) == 2
+  assert conn2.sid == socketio_test_client2.sid
+
+  socketio_test_client.disconnect()
+  
+  assert len(Connection.objects) == 1
+  # assert conn1 404s
+
+  socketio_test_client2.disconnect()
+
+  assert len(Connection.objects) == 0
+
+
+
+# if __name__ == 'app':
+#   socketio_test()
