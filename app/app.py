@@ -1,5 +1,5 @@
 from database.mongodb import initialize_db
-from database.models import Group
+from database.models import Group, Connection
 from flask import Flask, request, Response
 from flask_socketio import SocketIO, send, emit, join_room, leave_room, rooms
 
@@ -45,9 +45,23 @@ def group_join(data):
   if find_group(data['access_code']):
     room = data['access_code']
     join_room(room)
+    try:
+      Connection(group=room, sid=request.sid).save()
+    except:
+      print('something went wrong with adding the connection')
     send('Successfully Connected to Group', room=room)
   else:
     raise ConnectionRefusedError('Group Not Found')
+
+
+# Remove connection from DB upon disconnect
+@socketio.on('disconnect')
+def on_disconnect():
+    connection = Connection.objects.get_or_404(sid=request.sid)
+    try:
+      connection.delete()
+    except:
+      print('something went wrong with deleting the connection')
 
 # Join a room. `on_join` expects a dictionary argument.
 @socketio.on('join_room')
