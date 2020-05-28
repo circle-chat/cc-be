@@ -44,9 +44,9 @@ def send_message(data):
 def group_join(data):
   if find_group(data['access_code']):
     room = data['access_code']
-    join_room(room)
     try:
       Connection(group=room, sid=request.sid).save()
+      join_room(room)
     except:
       print('something went wrong with adding the connection')
     send('Successfully Connected to Group', room=room)
