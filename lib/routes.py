@@ -47,6 +47,15 @@ def group_join(data):
   else:
     raise ConnectionRefusedError('Group Not Found')
 
+# Remove connection from DB upon disconnect
+@socketio.on('disconnect')
+def on_disconnect():
+    try:
+      connection = Connection.objects.get(sid=request.sid)
+      connection.delete()
+    except:
+      print('something went wrong with deleting the connection')
+
 # Join a room. `on_join` expects a dictionary argument.
 @socketio.on('join_room')
 def on_join_room(data):
