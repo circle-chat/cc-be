@@ -2,7 +2,7 @@ from flask import request, Response, url_for
 from lib import app, db, socketio
 from flask_socketio import send, emit, join_room, leave_room, rooms
 from mongoengine import *
-from lib.models import Group
+from lib.models import Group, Connection
 
 
 
@@ -23,16 +23,29 @@ def send_message(data):
 
 # Find a group
 def find_group(access_code):
-  Group.objects(access_code=access_code).get_or_404()
+  if Group.objects(access_code= f"{access_code}"):
+    return True
+  else:
+    return False
 
 @app.route('/groups', methods=['GET'])
 def get_groups():
   groups = Group.objects().to_json()
   return Response(groups, mimetype="application/json", status=200)
-  
+
 # # Join a group
-# @socketio.on('join_group')
-# def on_join_group(data):
+@socketio.on('join_group')
+def group_join(data):
+  if find_group(data['access_code']):
+    room = data['access_code']
+    try:
+      Connection(group=room, sid=request.sid).save()
+      join_room(room)
+    except:
+      print('something went wrong with adding the connection')
+    send('Successfully Connected to Group', room=room)
+  else:
+    raise ConnectionRefusedError('Group Not Found')
 
 # Join a room. `on_join` expects a dictionary argument.
 @socketio.on('join_room')
