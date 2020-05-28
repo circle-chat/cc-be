@@ -1,6 +1,7 @@
 import mongoengine as me
 class Group(me.Document):
-  access_code = me.StringField(required=True)
+  name = me.StringField(required=True, unique=True)
+  access_code = me.StringField(required=True, unique=True)
   description = me.StringField(required=True)
   rules = me.StringField()
   created = me.DateTimeField()
