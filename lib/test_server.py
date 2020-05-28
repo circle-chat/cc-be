@@ -1,5 +1,6 @@
 from lib import app, socketio, db
 from lib.routes import add_group
+from lib.models import Connection
 
 def test_socketio_connection():
   flask_test_client = app.test_client()
@@ -55,7 +56,7 @@ def test_each_connected_client_in_room_sees_message():
   socketio_test_client2.emit('join_room', {'room': 'test'})
   client1_data = socketio_test_client.get_received()
   client2_data = socketio_test_client2.get_received()
-  
+
   socketio_test_client.emit('message', {'message': 'Hello World 2', 'room': 'test'})
 
   client1_data = socketio_test_client.get_received()
@@ -77,7 +78,7 @@ def test_each_connected_client_in_room_sees_when_leaving():
   socketio_test_client2.emit('join_room', {'room': 'test'})
   socketio_test_client.get_received()
   client2_data = socketio_test_client2.get_received()
-  
+
   socketio_test_client.emit('leave', {'room': 'test'})
 
   client2_data = socketio_test_client2.get_received()
@@ -108,8 +109,57 @@ def test_broadcast_message():
 
 # def test_can_add_a_group():
 #   flask_test_client = app.test_client()
-#   group_test = 
+#   group_test =
 
+def test_active_sockets():
+  Connection.objects.delete()
+
+  assert len(Connection.objects(group='test2')) == 0
+
+  flask_test_client = app.test_client()
+  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client.emit('join_group', {'access_code': "test2"})
+  conn1 = Connection.objects.get(sid=socketio_test_client.sid)
+
+  assert len(Connection.objects(group='test2')) == 1
+  assert conn1.sid == socketio_test_client.sid
+
+  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client2.emit('join_group', {'access_code': "test2"})
+  conn2 = Connection.objects.get(sid=socketio_test_client2.sid)
+
+  assert len(Connection.objects(group='test2')) == 2
+  assert conn2.sid == socketio_test_client2.sid
+
+  socketio_test_client.disconnect()
+
+  assert len(Connection.objects(group='test2')) == 1
+
+  socketio_test_client2.disconnect()
+
+  assert len(Connection.objects(group='test2')) == 0
+
+def test_group_connection_differentiation():
+  Connection.objects.delete()
+
+  assert len(Connection.objects(group='test')) == 0
+  assert len(Connection.objects(group='test2')) == 0
+
+  flask_test_client = app.test_client()
+  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client.emit('join_group', {'access_code': 'test'})
+  socketio_test_client2.emit('join_group', {'access_code': 'test2'})
+
+  assert len(Connection.objects(group='test')) == 1
+  assert len(Connection.objects(group='test2')) == 1
+  assert len(Connection.objects) == 2
+
+  socketio_test_client2.disconnect()
+
+  assert len(Connection.objects(group='test')) == 1
+  assert len(Connection.objects(group='test2')) == 0
+  assert len(Connection.objects) == 1
 
 
 if __name__ == 'app':
