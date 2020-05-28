@@ -139,5 +139,28 @@ def test_active_sockets():
 
   assert len(Connection.objects(group='test2')) == 0
 
+def test_group_connection_differentiation():
+  Connection.objects.delete()
+
+  assert len(Connection.objects(group='test')) == 0
+  assert len(Connection.objects(group='test2')) == 0
+
+  flask_test_client = app.test_client()
+  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client.emit('join_group', {'access_code': 'test'})
+  socketio_test_client2.emit('join_group', {'access_code': 'test2'})
+
+  assert len(Connection.objects(group='test')) == 1
+  assert len(Connection.objects(group='test2')) == 1
+  assert len(Connection.objects) == 2
+
+  socketio_test_client2.disconnect()
+
+  assert len(Connection.objects(group='test')) == 1
+  assert len(Connection.objects(group='test2')) == 0
+  assert len(Connection.objects) == 1
+
+
 if __name__ == 'app':
   socketio_test()
