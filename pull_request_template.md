@@ -6,10 +6,11 @@
 - [ ] Bug Fix
 - [ ] Refactor
 - [ ] Breaking Change
+- [ ] Testing
 
 ## Notes
 
-## RSpec results
+## Pytest Results
 
 ```
 Paste RSpec results here
