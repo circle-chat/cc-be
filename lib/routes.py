@@ -52,7 +52,7 @@ def group_join(data):
   if find_group(data['access_code']):
     room = data['access_code']
     try:
-      Connection(group=room, sid=request.sid).save()
+      Connection(group=room, sid=request.sid, created=datetime.utcnow).save()
       join_room(room)
     except:
       print('something went wrong with adding the connection')
