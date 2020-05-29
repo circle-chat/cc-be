@@ -23,7 +23,6 @@ def teardown_module():
   Group.drop_collection()
   Connection.drop_collection()
 
-
 def test_socketio_connection():
   flask_test_client = app.test_client()
 
@@ -134,8 +133,6 @@ def test_broadcast_message():
 #   group_test =
 
 def test_active_sockets():
-  Connection.objects.delete()
-
   assert len(Connection.objects(group='test2')) == 0
 
   flask_test_client = app.test_client()
@@ -162,8 +159,6 @@ def test_active_sockets():
   assert len(Connection.objects(group='test2')) == 0
 
 def test_group_connection_differentiation():
-  Connection.objects.delete()
-
   assert len(Connection.objects(group='test')) == 0
   assert len(Connection.objects(group='test2')) == 0
 
@@ -182,7 +177,3 @@ def test_group_connection_differentiation():
   assert len(Connection.objects(group='test')) == 1
   assert len(Connection.objects(group='test2')) == 0
   assert len(Connection.objects) == 1
-
-
-if __name__ == 'app':
-  socketio_test()
