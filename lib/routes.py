@@ -3,15 +3,28 @@ from lib import app, db, socketio
 from flask_socketio import send, emit, join_room, leave_room, rooms
 from mongoengine import *
 from lib.models import Group, Connection
-
+from datetime import datetime
+import secrets
 
 
 # Test group room route
 @app.route('/groups', methods=['POST'])
 def add_group():
   body = request.form
-  group = Group(**body).save()
-  return Response(group.to_json(), mimetype="application/json", status=200)
+  if body['name'] != '' and body['description'] != '':
+    try:
+      group = Group(
+        name=body['name'],
+        description=body['description'],
+        access_code=secrets.token_hex(4),
+        rules=body['rules'],
+        created=datetime.utcnow
+      ).save()
+      return Response(group.to_json(), mimetype="application/json", status=200)
+    except:
+      print('Group was not able to be created.')
+  else:
+    return Response('Please enter a group name and description.')
 
 # Send Message. Namespace is an example
 @socketio.on('message')
@@ -39,7 +52,7 @@ def group_join(data):
   if find_group(data['access_code']):
     room = data['access_code']
     try:
-      Connection(group=room, sid=request.sid).save()
+      Connection(group=room, sid=request.sid, created=datetime.utcnow).save()
       join_room(room)
     except:
       print('something went wrong with adding the connection')

@@ -1,6 +1,6 @@
 from lib import app, socketio, db
 from lib.routes import add_group
-from lib.models import Connection
+from lib.models import Connection, Group
 
 def test_socketio_connection():
   flask_test_client = app.test_client()
