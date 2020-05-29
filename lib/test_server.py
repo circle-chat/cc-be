@@ -1,6 +1,28 @@
 from lib import app, socketio, db
 from lib.routes import add_group
 from lib.models import Connection, Group
+from datetime import datetime
+
+def setup_module():
+  group = Group(
+      name="Test",
+      description="Test",
+      access_code="test",
+      rules="test",
+      created=datetime.utcnow
+  ).save()
+  group = Group(
+      name="Test",
+      description="Test",
+      access_code="test2",
+      rules="test",
+      created=datetime.utcnow
+  ).save()
+
+def teardown_module():
+  Group.drop_collection()
+  Connection.drop_collection()
+
 
 def test_socketio_connection():
   flask_test_client = app.test_client()
