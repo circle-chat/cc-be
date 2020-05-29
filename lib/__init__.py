@@ -10,6 +10,6 @@ app.config['MONGODB_SETTINGS'] = {
   'host': 'mongodb://localhost/cc-be'
 }
 db = MongoEngine(app)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 from lib import routes, models
