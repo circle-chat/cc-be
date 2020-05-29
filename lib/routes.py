@@ -11,7 +11,7 @@ import secrets
 @app.route('/groups', methods=['POST'])
 def add_group():
   body = request.form
-  if body.name == '' and body.description == '':
+  if body['name'] != '' and body['description'] != '':
     group = Group(
       name=body['name'],
       description=body['description'],
