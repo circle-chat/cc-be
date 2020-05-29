@@ -36,7 +36,7 @@ def send_message(data):
 
 # Find a group
 def find_group(access_code):
-  if Group.objects(access_code= f"{access_code}"):
+  if Group.objects(access_code=f"{access_code}"):
     return True
   else:
     return False
