@@ -12,14 +12,17 @@ import secrets
 def add_group():
   body = request.form
   if body['name'] != '' and body['description'] != '':
-    group = Group(
-      name=body['name'],
-      description=body['description'],
-      access_code=secrets.token_hex(4),
-      rules=body['rules'],
-      created=datetime.utcnow
-    ).save()
-    return Response(group.to_json(), mimetype="application/json", status=200)
+    try:
+      group = Group(
+        name=body['name'],
+        description=body['description'],
+        access_code=secrets.token_hex(4),
+        rules=body['rules'],
+        created=datetime.utcnow
+      ).save()
+      return Response(group.to_json(), mimetype="application/json", status=200)
+    except:
+      print('Group was not able to be created.')
   else:
     return Response('Please enter a group name and description.')
 
