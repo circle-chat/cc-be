@@ -3,7 +3,6 @@ from lib.routes import add_group
 from lib.models import Connection, Group
 from datetime import datetime
 
-
 def setup_module():
   group = Group(
       name="Test",

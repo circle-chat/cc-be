@@ -494,7 +494,7 @@ ipaddress = ["ipaddress"]
 locale = ["Babel (>=1.3)"]
 
 [metadata]
-content-hash = "28a79635d09923a9089a40fac0d97d3bbb445fd2602291393428ca3019a44309"
+content-hash = "db8bee217f108ee90eaf0b5f8f078e2cfe89adc98967d299ee384f0d3c7941ea"
 python-versions = "^3.8"
 
 [metadata.files]
