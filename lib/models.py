@@ -1,4 +1,5 @@
 import mongoengine as me
+
 class Group(me.Document):
   name = me.StringField(required=True, unique=True)
   access_code = me.StringField(required=True, unique=True)
@@ -15,3 +16,7 @@ class Group(me.Document):
       }
     ]
   }
+
+class Connection(me.Document):
+  sid = me.StringField(require=True, unique=True)
+  group = me.StringField(require=True)
