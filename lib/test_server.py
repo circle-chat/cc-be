@@ -177,3 +177,36 @@ def test_group_connection_differentiation():
   assert len(Connection.objects(group='test')) == 1
   assert len(Connection.objects(group='test2')) == 0
   assert len(Connection.objects) == 1
+
+def test_matchmaking():
+  Connection.objects.delete()
+  flask_test_client = app.test_client()
+  client1 = socketio.test_client(app, flask_test_client=flask_test_client)
+  client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  client3 = socketio.test_client(app, flask_test_client=flask_test_client)
+  room_name = f"room_{client2.sid}"
+  client1.emit('join_group', {'access_code': 'test'})
+  data1 = client1.get_received()
+
+  assert data1[0]['args'] == 'Successfully Connected to Group'
+
+  client2.emit('join_group', {'access_code': 'test'})
+  data1 = client1.get_received()
+  data2 = client2.get_received()
+
+  assert data1[0]['args'] == f"Connected to {room_name}"
+  assert data2[0]['args'] == f"Connected to {room_name}"
+
+  client3.emit('join_group', {'access_code': 'test'})
+  data3 = client3.get_received()
+
+  assert data3[0]['args'] == 'Successfully Connected to Group'
+
+  client1.emit('message', {'message': 'Client 3 should not see this', 'room': room_name})
+  data1 = client1.get_received()
+  data2 = client2.get_received()
+  data3 = client3.get_received()
+
+  assert data1[0]['args'] == 'Client 3 should not see this'
+  assert data2[0]['args'] == 'Client 3 should not see this'
+  assert data3 == []
