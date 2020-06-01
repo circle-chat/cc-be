@@ -13,3 +13,10 @@ __pycache__
 # Hide secrets
 config.py
 .env
+
+# Docker
+Dockerfile
+.dockerignore
+
+# gCloud
+.gcloudignore
