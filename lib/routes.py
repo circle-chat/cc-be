@@ -108,8 +108,11 @@ def on_join_room(data):
 @socketio.on('leave')
 def on_leave(data):
   room = data['room']
+  return_group = data['return_to']
   leave_room(room)
   send(f'A User left the {room} room', room=room)
+  if return_group:
+    join_room(return_group)
 
 # Global Broadcast.
 @socketio.on("gmessage")
