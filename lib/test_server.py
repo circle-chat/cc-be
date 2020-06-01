@@ -190,7 +190,7 @@ def test_matchmaking():
   client1 = socketio.test_client(app, flask_test_client=flask_test_client)
   client2 = socketio.test_client(app, flask_test_client=flask_test_client)
   client3 = socketio.test_client(app, flask_test_client=flask_test_client)
-  room_name = f"room_{client2.sid}"
+  room2 = f"room_{client2.sid}"
 
   client1.emit('join_group', {'access_code': 'test'})
   data1 = client1.get_received()
@@ -201,21 +201,21 @@ def test_matchmaking():
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[0]['args'] == f"Connected to {room_name}"
-  assert data2[0]['args'] == f"Connected to {room_name}"
+  assert data1[0]['args'] == f"Connected to {room2}"
+  assert data2[0]['args'] == f"Connected to {room2}"
 
   client3.emit('join_group', {'access_code': 'test'})
   data3 = client3.get_received()
 
   assert data3[0]['args'] == 'Successfully Connected to Group'
 
-  client1.emit('message', {'message': 'Client 3 should not see this', 'room': room_name})
+  client1.emit('message', {'message': 'Client 3 should not see this', 'room': room2})
   data1 = client1.get_received()
   data2 = client2.get_received()
   data3 = client3.get_received()
 
-  assert data1[0]['args'] == 'Client 3 should not see this'
-  assert data2[0]['args'] == 'Client 3 should not see this'
+  assert data1[-1]['args'] == 'Client 3 should not see this'
+  assert data2[-1]['args'] == 'Client 3 should not see this'
   assert data3 == []
 
 
@@ -223,25 +223,26 @@ def test_leaving_sends_client_back_to_group():
   flask_test_client = app.test_client()
   client1 = socketio.test_client(app, flask_test_client=flask_test_client)
   client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  room2 = f"room_{client2.sid}"
 
   client1.emit('join_group', {'access_code': 'test'})
 
   assert len(Group.objects(access_code='test')) == 1
 
-  client1.emit('message', {'message': 'Test 1', 'room': 'test'})
+  client2.emit('message', {'message': 'Test 1', 'room': 'test'})
   data1 = client1.get_received()
 
   assert data1[-1]['args'] == 'Test 1'
 
   client2.emit('join_group', {'access_code': 'test'})
-  client1.emit('message', {'message': 'Test 2', 'room': 'test'})
+  client2.emit('message', {'message': 'Test 2', 'room': 'test'})
 
   data1 = client1.get_received()
 
-  assert data1[-1]['args'] != 'Test 1'
+  assert data1[-1]['args'] != 'Test 2'
 
-  client1.emit('leave', {'room': f'room_{client2.sid}', 'return_to': 'test'})
-  client1.emit('message', {'message': 'Test 3', 'room': 'test'})
+  client1.emit('leave', {'room': room2, 'return_to': 'test'})
+  client2.emit('message', {'message': 'Test 3', 'room': 'test'})
   data1 = client1.get_received()
 
   assert data1[-1]['args'] == 'Test 3'
