@@ -68,7 +68,7 @@ def group_join(data):
 def matchmake(group):
   match = None
   if len(Connection.objects(group=group, waiting=True)) > 1:
-    for conn in Connection.objects:
+    for conn in Connection.objects(group=group, waiting=True):
       if conn.sid != request.sid:
         match = conn.sid
         break
