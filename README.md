@@ -1,1 +1,1 @@
-Hey this is a readme and stuff for a python thingy.  Jordan will fix this later!
+[![CircleCI](https://circleci.com/gh/circle-chat/cc-be/tree/master.svg?style=svg)](https://circleci.com/gh/circle-chat/cc-be/tree/master)

@@ -49,15 +49,42 @@ def get_groups():
 @socketio.on('join_group')
 def group_join(data):
   if find_group(data['access_code']):
-    room = data['access_code']
+    group = data['access_code']
+    room = None
     try:
-      Connection(group=room, sid=request.sid, created=datetime.utcnow).save()
-      join_room(room)
+      Connection(group=group, sid=request.sid, created=datetime.utcnow).save()
+      join_room(group)
+      room = matchmake(group)
     except:
       print('something went wrong with adding the connection')
-    send('Successfully Connected to Group', room=room)
+    if room:
+      send(f'Connected to {room}', room=room)
+    else:
+      send('Successfully Connected to Group', room=group)
   else:
     raise ConnectionRefusedError('Group Not Found')
+
+def matchmake(group):
+  match = None
+  if len(Connection.objects(group=group, waiting=True)) > 1:
+    for conn in Connection.objects(group=group, waiting=True):
+      if conn.sid != request.sid:
+        match = conn.sid
+        break
+      
+  if match:
+    room = f"room_{request.sid}"
+    join_room(room)
+    join_room(sid=match, room=room)
+    leave_room(room=group)
+    leave_room(sid=match, room=group)
+    my_conn = Connection.objects(sid=request.sid).first()
+    their_conn = Connection.objects(sid=match).first()
+    my_conn.waiting = False
+    my_conn.save()
+    their_conn.waiting = False
+    their_conn.save()
+    return room
 
 # Remove connection from DB upon disconnect
 @socketio.on('disconnect')
@@ -80,8 +107,16 @@ def on_join_room(data):
 @socketio.on('leave')
 def on_leave(data):
   room = data['room']
+  return_group = data['return_to']
   leave_room(room)
   send(f'A User left the {room} room', room=room)
+  if return_group:
+    my_conn = Connection.objects(sid=request.sid).first()
+    my_conn.waiting = True
+    my_conn.save()
+    join_room(return_group)
+    matchmake(return_group)
+
 
 # Global Broadcast.
 @socketio.on("gmessage")

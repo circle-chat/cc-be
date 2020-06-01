@@ -20,6 +20,7 @@ class Group(me.Document):
 class Connection(me.Document):
   sid = me.StringField(require=True, unique=True)
   group = me.StringField(require=True)
+  waiting = me.BooleanField(default=True)
   created = me.DateTimeField()
   meta = {
       'auto_create_index': True,
