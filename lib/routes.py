@@ -112,7 +112,12 @@ def on_leave(data):
   leave_room(room)
   send(f'A User left the {room} room', room=room)
   if return_group:
+    my_conn = Connection.objects(sid=request.sid).first()
+    my_conn.waiting = True
+    my_conn.save()
     join_room(return_group)
+    matchmake(return_group)
+
 
 # Global Broadcast.
 @socketio.on("gmessage")
