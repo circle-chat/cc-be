@@ -4,18 +4,19 @@ from lib.models import Connection, Group
 from datetime import datetime
 
 def setup_module():
-  group = Group(
+  Group(
       name="Test",
       description="Test",
       access_code="test",
       rules="test",
       created=datetime.utcnow
   ).save()
-  group = Group(
-      name="Test",
-      description="Test",
+
+  Group(
+      name="Test2",
+      description="Test2",
       access_code="test2",
-      rules="test",
+      rules="test2",
       created=datetime.utcnow
   ).save()
 
@@ -135,6 +136,7 @@ def test_broadcast_message():
 #   flask_test_client = app.test_client()
 #   group_test =
 
+
 def test_active_sockets():
   assert len(Connection.objects(group='test2')) == 0
 
@@ -161,6 +163,7 @@ def test_active_sockets():
 
   assert len(Connection.objects(group='test2')) == 0
 
+
 def test_group_connection_differentiation():
   assert len(Connection.objects(group='test')) == 0
   assert len(Connection.objects(group='test2')) == 0
@@ -180,6 +183,7 @@ def test_group_connection_differentiation():
   assert len(Connection.objects(group='test')) == 1
   assert len(Connection.objects(group='test2')) == 0
   assert len(Connection.objects) == 1
+
 
 def test_matchmaking():
   flask_test_client = app.test_client()
@@ -213,3 +217,31 @@ def test_matchmaking():
   assert data1[0]['args'] == 'Client 3 should not see this'
   assert data2[0]['args'] == 'Client 3 should not see this'
   assert data3 == []
+
+
+def test_leaving_sends_client_back_to_group():
+  flask_test_client = app.test_client()
+  client1 = socketio.test_client(app, flask_test_client=flask_test_client)
+  client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+
+  client1.emit('join_group', {'access_code': 'test'})
+
+  assert len(Group.objects(access_code='test')) == 1
+
+  client1.emit('message', {'message': 'Test 1', 'room': 'test'})
+  data1 = client1.get_received()
+
+  assert data1[-1]['args'] == 'Test 1'
+
+  client2.emit('join_group', {'access_code': 'test'})
+  client1.emit('message', {'message': 'Test 2', 'room': 'test'})
+
+  data1 = client1.get_received()
+
+  assert data1[-1]['args'] != 'Test 1'
+
+  client1.emit('leave', {'room': f'room_{client2.sid}', 'return_to': 'test'})
+  client1.emit('message', {'message': 'Test 3', 'room': 'test'})
+  data1 = client1.get_received()
+
+  assert data1[-1]['args'] == 'Test 3'
