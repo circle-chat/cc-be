@@ -42,8 +42,8 @@ def find_group(access_code):
 
 @app.route('/groups', methods=['GET'])
 def get_groups():
-  groups = Group.objects()
-  return Response(groups.to_json()[0], mimetype="application/json", status=200)
+  groups = Group.objects().to_json()
+  return Response(groups, mimetype="application/json", status=200)
 
 # # Join a group
 @socketio.on('join_group')
