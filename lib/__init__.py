@@ -5,10 +5,7 @@ from flask_mongoengine import MongoEngine
 
 
 app = Flask(__name__)
-app.config.from_object(Config)
-app.config['MONGODB_SETTINGS'] = {
-  'host': 'mongodb://localhost/cc-be'
-}
+app.config.from_object('config.ProdConfig')
 db = MongoEngine(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
