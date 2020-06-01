@@ -19,6 +19,9 @@ def setup_module():
       created=datetime.utcnow
   ).save()
 
+def teardown_function():
+  Connection.drop_collection()
+
 def teardown_module():
   Group.drop_collection()
   Connection.drop_collection()
@@ -100,7 +103,7 @@ def test_each_connected_client_in_room_sees_when_leaving():
   socketio_test_client.get_received()
   client2_data = socketio_test_client2.get_received()
 
-  socketio_test_client.emit('leave', {'room': 'test'})
+  socketio_test_client.emit('leave', {'room': 'test', 'return_to': ''})
 
   client2_data = socketio_test_client2.get_received()
   client2_message = client2_data[0]['args']
@@ -179,12 +182,12 @@ def test_group_connection_differentiation():
   assert len(Connection.objects) == 1
 
 def test_matchmaking():
-  Connection.objects.delete()
   flask_test_client = app.test_client()
   client1 = socketio.test_client(app, flask_test_client=flask_test_client)
   client2 = socketio.test_client(app, flask_test_client=flask_test_client)
   client3 = socketio.test_client(app, flask_test_client=flask_test_client)
   room_name = f"room_{client2.sid}"
+
   client1.emit('join_group', {'access_code': 'test'})
   data1 = client1.get_received()
 
