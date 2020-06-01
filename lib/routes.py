@@ -1,4 +1,4 @@
-from flask import request, Response, url_for, json
+from flask import request, Response, url_for
 from circle import app, db, socketio
 from flask_socketio import send, emit, join_room, leave_room, rooms
 from lib.models import Group, Connection
@@ -43,7 +43,7 @@ def find_group(access_code):
 @app.route('/groups', methods=['GET'])
 def get_groups():
   groups = Group.objects()
-  return Response(json.dumps(groups), mimetype="application/json", status=200)
+  return Response(groups.to_json()[0], mimetype="application/json", status=200)
 
 # # Join a group
 @socketio.on('join_group')
