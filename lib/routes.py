@@ -1,7 +1,6 @@
 from flask import request, Response, url_for
 from circle import app, db, socketio
 from flask_socketio import send, emit, join_room, leave_room, rooms
-from mongoengine import *
 from lib.models import Group, Connection
 from datetime import datetime
 import secrets
