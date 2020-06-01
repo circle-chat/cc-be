@@ -1,21 +1,13 @@
 FROM python:3.8.3-buster
-# RUN pip install poetry
-# WORKDIR /circle-chat
-# COPY poetry.lock pyproject.toml /circle-chat/
-# RUN mkdir /circle-chat/lib && touch /circle-chat/lib/__init__.py
-# RUN cd /tmp && poetry install --no-root
-# Copy in everything else:
-# COPY . .
-# RUN poetry install --no-interaction
-# COPY . /circle-chat
-
-
-COPY ./requirements.txt /app/requirements.txt
 
 WORKDIR /app
 
+COPY requirements.txt /app/requirements.txt
+
 RUN pip install -r requirements.txt
 
-COPY . /app
+COPY . ./
 
-CMD flask run
+ENV PORT 8080
+
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 circle:app
