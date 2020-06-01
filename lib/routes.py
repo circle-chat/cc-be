@@ -91,8 +91,8 @@ def handleMessage(msg):
 # Error handling default.
 @socketio.on_error_default
 def default_error_handler(e):
-  print(request.event["message"]) # "my error event"
-  print(request.event["args"])    # (data,)
+  print(request.event["message"])
+  print(request.event["args"])
 
 if __name__ == '__main__':
     socketio.run(app)
