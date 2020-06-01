@@ -18,17 +18,18 @@ class Group(me.Document):
   }
 
 class Connection(me.Document):
+  user_name = me.StringField()
   sid = me.StringField(require=True, unique=True)
   group = me.StringField(require=True)
   waiting = me.BooleanField(default=True)
   created = me.DateTimeField()
   meta = {
       'auto_create_index': True,
-      'index_opts': {'expireAfterSeconds': 259200},
+      'index_opts': {'expireAfterSeconds': 43200},
       'indexes': [
           {
               'fields': ['created'],
-              'expireAfterSeconds': 259200
+              'expireAfterSeconds': 43200
           }
       ]
   }
