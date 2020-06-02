@@ -2,7 +2,6 @@ version: 2.1
 
 jobs:
   build-and-test:
-    working-directory: ~/app
     docker:
       - image: circleci/python:3.8.3
       - image: circleci/mongo:4.2
