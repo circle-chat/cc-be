@@ -1,4 +1,4 @@
-from lib import app, socketio, db
+from circle import app, socketio, db
 from lib.routes import add_group
 from lib.models import Connection, Group
 from datetime import datetime

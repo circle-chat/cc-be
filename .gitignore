@@ -4,6 +4,19 @@ __pycache__
 
 *.pyc
 
+# PyTest Cache
 .pytest_cache
 
+# PyCov Report
 .coverage
+
+# Hide secrets
+config.py
+.env
+
+# Docker
+Dockerfile
+.dockerignore
+
+# gCloud
+.gcloudignore
