@@ -192,24 +192,24 @@ def test_matchmaking():
   client3 = socketio.test_client(app, flask_test_client=flask_test_client)
   room2 = f"room_{client2.sid}"
 
-  client1.emit('join_group', {'access_code': 'test'})
+  client1.emit('join_group', {'access_code': 'test', 'name': 'Client 1'})
   data1 = client1.get_received()
 
-  assert data1[0]['args'] == 'Successfully Connected to Group'
+  assert data1[0]['args'][0]['access_code'] == 'test'
 
-  client2.emit('join_group', {'access_code': 'test'})
+  client2.emit('join_group', {'access_code': 'test', 'name': 'Client 2'})
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[0]['args'] == [room2]
-  assert data2[0]['args'] == [room2]
-  assert data1[-1]['args'] == f"Connected to {room2}"
-  assert data2[-1]['args'] == f"Connected to {room2}"
+  assert data1[0]['args'][0]['room'] == room2
+  assert data2[1]['args'][0]['room'] == room2
+  assert data1[-1]['args'] == "Client 2 connected."
+  assert data2[-1]['args'] == "Client 2 connected."
 
   client3.emit('join_group', {'access_code': 'test'})
   data3 = client3.get_received()
 
-  assert data3[0]['args'] == 'Successfully Connected to Group'
+  assert data3[0]['args'][0]['access_code'] == 'test'
 
   client1.emit('message', {'message': 'Client 3 should not see this', 'room': room2})
   data1 = client1.get_received()
@@ -248,6 +248,7 @@ def test_leaving_sends_client_back_to_group():
   data1 = client1.get_received()
 
   assert data1[-1]['args'] == 'Test 3'
+
 
 def test_automatic_matchmaking_after_leaving_room():
   flask_test_client = app.test_client()
