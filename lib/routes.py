@@ -84,7 +84,9 @@ def matchmake(group):
     my_conn.save()
     their_conn.waiting = False
     their_conn.save()
-    emit('join_room', room, room=room)
+    emit('join_room', {'room': room, 'user': my_conn.user_name, 'match': their_conn.user_name}, room=my_conn.sid)
+    emit('join_room', {'room': room, 'user': their_conn.user_name, 'match': my_conn.user_name}, room=their_conn.sid)
+    send(f'{my_conn.user_name} connected.', room=room)
     return room
 
 # Remove connection from DB upon disconnect
