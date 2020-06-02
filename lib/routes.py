@@ -1,7 +1,6 @@
 from flask import request, Response, url_for
-from lib import app, db, socketio
+from circle import app, db, socketio
 from flask_socketio import send, emit, join_room, leave_room, rooms
-from mongoengine import *
 from lib.models import Group, Connection
 from datetime import datetime
 import secrets
@@ -10,7 +9,7 @@ import secrets
 # Test group room route
 @app.route('/groups', methods=['POST'])
 def add_group():
-  body = request.form
+  body = request.json
   if body['name'] != '' and body['description'] != '':
     try:
       group = Group(
@@ -85,6 +84,7 @@ def matchmake(group):
     my_conn.save()
     their_conn.waiting = False
     their_conn.save()
+    emit('join_room', room, room=room)
     return room
 
 # Remove connection from DB upon disconnect
@@ -127,8 +127,8 @@ def handleMessage(msg):
 # Error handling default.
 @socketio.on_error_default
 def default_error_handler(e):
-  print(request.event["message"]) # "my error event"
-  print(request.event["args"])    # (data,)
+  print(request.event["message"])
+  print(request.event["args"])
 
-if __name__ == '__main__':
-    socketio.run(app)
+# if __name__ == '__main__':
+#     socketio.run(app)
