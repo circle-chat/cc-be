@@ -9,7 +9,7 @@ import secrets
 # Test group room route
 @app.route('/groups', methods=['POST'])
 def add_group():
-  body = request.form
+  body = request.json
   if body['name'] != '' and body['description'] != '':
     try:
       group = Group(
@@ -84,6 +84,7 @@ def matchmake(group):
     my_conn.save()
     their_conn.waiting = False
     their_conn.save()
+    emit('join_room', room, room=room)
     return room
 
 # Remove connection from DB upon disconnect
@@ -129,5 +130,5 @@ def default_error_handler(e):
   print(request.event["message"])
   print(request.event["args"])
 
-if __name__ == '__main__':
-    socketio.run(app)
+# if __name__ == '__main__':
+#     socketio.run(app)
