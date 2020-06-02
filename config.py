@@ -26,4 +26,4 @@ class TestConfig(Config):
     FLASK_ENV = 'testing'
     DEBUG = True
     TESTING = True
-    MONGODB_HOST = environ.get('TEST_DATABASE_URL')
+    MONGODB_HOST = 'mongodb://localhost/cc-be'
