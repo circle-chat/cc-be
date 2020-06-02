@@ -51,16 +51,16 @@ def group_join(data):
   if find_group(data['access_code']):
     group = data['access_code']
     room = None
+    name = 'Anonymous'
+    if 'name' in data.keys():
+      name = data['name']
     try:
-      Connection(group=group, sid=request.sid, created=datetime.utcnow).save()
+      user = Connection(group=group, sid=request.sid, created=datetime.utcnow, user_name=name).save()
       join_room(group)
-      room = matchmake(group)
+      emit('join_group', {'sid': user.sid, 'name': user.user_name, 'access_code': group}, room=user.sid)
+      matchmake(group)
     except:
-      print('something went wrong with adding the connection')
-    if room:
-      send(f'Connected to {room}', room=room)
-    else:
-      send('Successfully Connected to Group', room=group)
+      print('Unable to create connection')
   else:
     raise ConnectionRefusedError('Group Not Found')
 
@@ -71,7 +71,6 @@ def matchmake(group):
       if conn.sid != request.sid:
         match = conn.sid
         break
-      
   if match:
     room = f"room_{request.sid}"
     join_room(room)
@@ -84,7 +83,9 @@ def matchmake(group):
     my_conn.save()
     their_conn.waiting = False
     their_conn.save()
-    emit('join_room', room, room=room)
+    emit('join_room', {'room': room, 'user': my_conn.user_name, 'match': their_conn.user_name}, room=my_conn.sid)
+    emit('join_room', {'room': room, 'user': their_conn.user_name, 'match': my_conn.user_name}, room=their_conn.sid)
+    send(f'{my_conn.user_name} connected.', room=room)
     return room
 
 # Remove connection from DB upon disconnect
