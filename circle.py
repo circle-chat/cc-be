@@ -7,7 +7,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-app.config.from_object('config.ProdConfig')
+app.config.from_object(['FLASK_ENV'])
 db = MongoEngine(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
