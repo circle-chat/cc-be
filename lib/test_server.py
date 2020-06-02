@@ -281,9 +281,9 @@ def test_name_sending():
   room2 = f"room_{client2.sid}"
 
   client1.emit('join_group', {'access_code': 'test', 'name': 'Client 1'})
-  client2.emit('join_group', {'access_code': 'test', 'name': 'Client 2'})
+  client2.emit('join_group', {'access_code': 'test'})
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[1]['args'][0]['match'] == 'Client 2'
+  assert data1[1]['args'][0]['match'] == 'Anonymous'
   assert data2[1]['args'][0]['match'] == 'Client 1'
