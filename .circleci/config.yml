@@ -32,3 +32,8 @@ jobs:
             poetry run pytest
             
 
+workflows:
+  main:
+    jobs:
+      - build-and-test
+
