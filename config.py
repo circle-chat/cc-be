@@ -20,5 +20,10 @@ class DevConfig(Config):
     FLASK_ENV = 'development'
     DEBUG = True
     TESTING = True
-    MONGODB_HOST = environ.get('MONGO_HOST_DEV')
-
+    MONGODB_HOST = environ.get('TEST_DATABASE_URL')
+    
+class TestConfig(Config):
+    FLASK_ENV = 'testing'
+    DEBUG = True
+    TESTING = True
+    MONGODB_HOST = environ.get('TEST_DATABASE_URL')
