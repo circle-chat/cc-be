@@ -201,8 +201,8 @@ def test_matchmaking():
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[0]['args'] == f"Connected to {room2}"
-  assert data2[0]['args'] == f"Connected to {room2}"
+  assert data1[0]['args'] == [f"{room2}"]
+  assert data2[0]['args'] == [f"{room2}"]
 
   client3.emit('join_group', {'access_code': 'test'})
   data3 = client3.get_received()
