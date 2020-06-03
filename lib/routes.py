@@ -69,7 +69,7 @@ def matchmake(group):
   my_conn = Connection.objects(sid=request.sid).first()
   if len(Connection.objects(group=group, waiting=True)) > 1:
     for conn in Connection.objects(group=group, waiting=True):
-      if conn.sid != request.sid and conn.sid != my_conn.last_match:
+      if conn.sid != request.sid and conn.sid != my_conn.last_match and conn.last_match != my_conn.sid:
         match = conn.sid
         break
   if match:
