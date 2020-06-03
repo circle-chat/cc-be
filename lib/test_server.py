@@ -301,10 +301,10 @@ def test_name_sending():
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[1]['args'][0]['match']['name'] == 'Anonymous'
-  assert data1[1]['args'][0]['match']['sid'] == client2.sid
-  assert data2[1]['args'][0]['match']['name'] == 'Client 1'
-  assert data2[1]['args'][0]['match']['sid'] == client1.sid
+  assert data1[0]['args'][0]['match']['name'] == 'Anonymous'
+  assert data1[0]['args'][0]['match']['sid'] == client2.sid
+  assert data2[0]['args'][0]['match']['name'] == 'Client 1'
+  assert data2[0]['args'][0]['match']['sid'] == client1.sid
 
 def test_clients_arent_rematched():
   flask_test_client = app.test_client()
@@ -320,8 +320,8 @@ def test_clients_arent_rematched():
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[-1]['args'] == 'Seeable'
-  assert data2[-1]['args'] == 'Seeable'
+  assert data1[-1]['args']['message'] == 'Seeable'
+  assert data2[-1]['args']['message'] == 'Seeable'
 
   client1.emit('leave', {'room': room2, 'return_to': 'test'})
   data2 = client2.get_received()
