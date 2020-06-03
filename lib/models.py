@@ -18,7 +18,6 @@ class Group(me.Document):
   }
 
 class Connection(me.Document):
-  user_name = me.StringField()
   sid = me.StringField(require=True, unique=True)
   group = me.StringField(require=True)
   waiting = me.BooleanField(default=True)
