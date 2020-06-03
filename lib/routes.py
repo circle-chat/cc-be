@@ -23,7 +23,7 @@ def add_group():
     except:
       print('Group was not able to be created.')
   else:
-    return Response('Please enter a group name and description.')
+    return Response('Please enter a group name and description.', status=400)
 
 # Send Message. Namespace is an example
 @socketio.on('message')
@@ -31,7 +31,7 @@ def send_message(data):
   room = data['room']
   msg = data['message']
   # print(data['message'], room=room)
-  send(msg, room=room)
+  emit('message', data, room=room)
 
 # Find a group
 def find_group(access_code):
@@ -55,9 +55,9 @@ def group_join(data):
     if 'name' in data.keys():
       name = data['name']
     try:
-      user = Connection(group=group, sid=request.sid, created=datetime.utcnow, user_name=name).save()
+      Connection(group=group, sid=request.sid, created=datetime.utcnow, user_name=name).save()
       join_room(group)
-      emit('join_group', {'sid': user.sid, 'name': user.user_name, 'access_code': group}, room=user.sid)
+      # emit('join_group', {'sid': user.sid, 'name': user.user_name, 'access_code': group}, room=user.sid)
       matchmake(group)
     except:
       print('Unable to create connection')
@@ -71,7 +71,7 @@ def matchmake(group):
     for conn in Connection.objects(group=group, waiting=True):
       if conn.sid != request.sid and conn.sid != my_conn.last_match and conn.last_match != my_conn.sid:
         match = conn.sid
-        break
+
   if match:
     room = f"room_{request.sid}"
     join_room(room)
@@ -90,6 +90,7 @@ def matchmake(group):
     send(f'{my_conn.user_name} connected.', room=room)
     return room
 
+
 # Remove connection from DB upon disconnect
 @socketio.on('disconnect')
 def on_disconnect():
@@ -99,13 +100,14 @@ def on_disconnect():
     except:
       print('something went wrong with deleting the connection')
 
+
 # Join a room. `on_join` expects a dictionary argument.
 @socketio.on('join_room')
 def on_join_room(data):
   room = data['room']
   join_room(room)
   send(f'Welcome to the {room} room', room=room)
-  # timer.limit = close_room()
+
 
 # Leave a room. `on_leave` expect a dictionary argument.
 @socketio.on('leave')
@@ -133,5 +135,5 @@ def default_error_handler(e):
   print(request.event["message"])
   print(request.event["args"])
 
-# if __name__ == '__main__':
-#     socketio.run(app)
+if __name__ == '__main__':
+    socketio.run(app, host='0.0.0.0', port=8080)
