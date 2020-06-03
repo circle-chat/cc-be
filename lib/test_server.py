@@ -3,6 +3,7 @@ from lib.routes import add_group
 from lib.models import Connection, Group
 from datetime import datetime
 
+
 def setup_module():
   Group(
       name="Test",
@@ -20,18 +21,23 @@ def setup_module():
       created=datetime.utcnow
   ).save()
 
+
 def teardown_function():
   Connection.drop_collection()
+
 
 def teardown_module():
   Group.drop_collection()
   Connection.drop_collection()
 
+
 def test_socketio_connection():
   flask_test_client = app.test_client()
 
-  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
-  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client = socketio.test_client(
+      app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(
+      app, flask_test_client=flask_test_client)
 
   assert socketio_test_client.is_connected()
 
@@ -40,8 +46,10 @@ def test_socketio_connection():
 
 def test_client_can_connect_to_room():
   flask_test_client = app.test_client()
-  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
-  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client = socketio.test_client(
+      app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(
+      app, flask_test_client=flask_test_client)
 
   socketio_test_client.emit('join_room', {'room': 'test'})
 
@@ -56,16 +64,19 @@ def test_client_can_connect_to_room():
 
 def test_server_can_send_message_to_room():
   flask_test_client = app.test_client()
-  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
-  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client = socketio.test_client(
+      app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(
+      app, flask_test_client=flask_test_client)
   socketio_test_client.emit('join_room', {'room': 'test'})
   client1_data = socketio_test_client.get_received()
 
-  socketio_test_client.emit('message', {'message': 'Hello World', 'room': 'test'})
+  socketio_test_client.emit(
+      'message', {'message': 'Hello World', 'room': 'test'})
 
   client1_data = socketio_test_client.get_received()
 
-  message = client1_data[0]['args']
+  message = client1_data[0]['args']['message']
   assert message == "Hello World"
 
   client2_data = socketio_test_client2.get_received()
@@ -75,30 +86,35 @@ def test_server_can_send_message_to_room():
 
 def test_each_connected_client_in_room_sees_message():
   flask_test_client = app.test_client()
-  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
-  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client = socketio.test_client(
+      app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(
+      app, flask_test_client=flask_test_client)
   socketio_test_client.emit('join_room', {'room': 'test'})
   socketio_test_client2.emit('join_room', {'room': 'test'})
   client1_data = socketio_test_client.get_received()
   client2_data = socketio_test_client2.get_received()
 
-  socketio_test_client.emit('message', {'message': 'Hello World 2', 'room': 'test'})
+  socketio_test_client.emit(
+      'message', {'message': 'Hello World 2', 'room': 'test'})
 
   client1_data = socketio_test_client.get_received()
 
-  client1_message = client1_data[0]['args']
+  client1_message = client1_data[0]['args']['message']
   assert client1_message == "Hello World 2"
 
   client2_data = socketio_test_client2.get_received()
-  client2_message = client2_data[0]['args']
+  client2_message = client2_data[0]['args']['message']
 
   assert client2_message == "Hello World 2"
 
 
 def test_each_connected_client_in_room_sees_when_leaving():
   flask_test_client = app.test_client()
-  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
-  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client = socketio.test_client(
+      app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(
+      app, flask_test_client=flask_test_client)
   socketio_test_client.emit('join_room', {'room': 'test'})
   socketio_test_client2.emit('join_room', {'room': 'test'})
   socketio_test_client.get_received()
@@ -114,8 +130,10 @@ def test_each_connected_client_in_room_sees_when_leaving():
 
 def test_broadcast_message():
   flask_test_client = app.test_client()
-  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
-  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client = socketio.test_client(
+      app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(
+      app, flask_test_client=flask_test_client)
   socketio_test_client.emit('join_room', {'room': 'test'})
   client1_data = socketio_test_client.get_received()
   client2_data = socketio_test_client2.get_received()
@@ -141,14 +159,16 @@ def test_active_sockets():
   assert len(Connection.objects(group='test2')) == 0
 
   flask_test_client = app.test_client()
-  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client = socketio.test_client(
+      app, flask_test_client=flask_test_client)
   socketio_test_client.emit('join_group', {'access_code': "test2"})
   conn1 = Connection.objects.get(sid=socketio_test_client.sid)
 
   assert len(Connection.objects(group='test2')) == 1
   assert conn1.sid == socketio_test_client.sid
 
-  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(
+      app, flask_test_client=flask_test_client)
   socketio_test_client2.emit('join_group', {'access_code': "test2"})
   conn2 = Connection.objects.get(sid=socketio_test_client2.sid)
 
@@ -169,8 +189,10 @@ def test_group_connection_differentiation():
   assert len(Connection.objects(group='test2')) == 0
 
   flask_test_client = app.test_client()
-  socketio_test_client = socketio.test_client(app, flask_test_client=flask_test_client)
-  socketio_test_client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  socketio_test_client = socketio.test_client(
+      app, flask_test_client=flask_test_client)
+  socketio_test_client2 = socketio.test_client(
+      app, flask_test_client=flask_test_client)
   socketio_test_client.emit('join_group', {'access_code': 'test'})
   socketio_test_client2.emit('join_group', {'access_code': 'test2'})
 
@@ -195,29 +217,23 @@ def test_matchmaking():
   client1.emit('join_group', {'access_code': 'test', 'name': 'Client 1'})
   data1 = client1.get_received()
 
-  assert data1[0]['args'][0]['access_code'] == 'test'
-
   client2.emit('join_group', {'access_code': 'test', 'name': 'Client 2'})
   data1 = client1.get_received()
   data2 = client2.get_received()
 
   assert data1[0]['args'][0]['room'] == room2
-  assert data2[1]['args'][0]['room'] == room2
-  assert data1[-1]['args'] == "Client 2 connected."
-  assert data2[-1]['args'] == "Client 2 connected."
+  assert data2[0]['args'][0]['room'] == room2
 
   client3.emit('join_group', {'access_code': 'test'})
   data3 = client3.get_received()
-
-  assert data3[0]['args'][0]['access_code'] == 'test'
-
-  client1.emit('message', {'message': 'Client 3 should not see this', 'room': room2})
+  client1.emit(
+      'message', {'message': 'Client 3 should not see this', 'room': room2})
   data1 = client1.get_received()
   data2 = client2.get_received()
   data3 = client3.get_received()
 
-  assert data1[-1]['args'] == 'Client 3 should not see this'
-  assert data2[-1]['args'] == 'Client 3 should not see this'
+  assert data1[-1]['args']['message'] == 'Client 3 should not see this'
+  assert data2[-1]['args']['message'] == 'Client 3 should not see this'
   assert data3 == []
 
 
@@ -234,7 +250,7 @@ def test_leaving_sends_client_back_to_group():
   client2.emit('message', {'message': 'Test 1', 'room': 'test'})
   data1 = client1.get_received()
 
-  assert data1[-1]['args'] == 'Test 1'
+  assert data1[-1]['args']['message'] == 'Test 1'
 
   client2.emit('join_group', {'access_code': 'test'})
   client2.emit('message', {'message': 'Test 2', 'room': 'test'})
@@ -247,7 +263,7 @@ def test_leaving_sends_client_back_to_group():
   client2.emit('message', {'message': 'Test 3', 'room': 'test'})
   data1 = client1.get_received()
 
-  assert data1[-1]['args'] == 'Test 3'
+  assert data1[-1]['args']['message'] == 'Test 3'
 
 
 def test_automatic_matchmaking_after_leaving_room():
@@ -269,9 +285,9 @@ def test_automatic_matchmaking_after_leaving_room():
   data2 = client2.get_received()
   data3 = client3.get_received()
 
-  assert data1[-1]['args'] == 'Clients 1 and 3 rule!'
+  assert data1[-1]['args']['message'] == 'Clients 1 and 3 rule!'
   assert data2[-1]['args'] != 'Clients 1 and 3 rule!'
-  assert data3[-1]['args'] == 'Clients 1 and 3 rule!'
+  assert data3[-1]['args']['message'] == 'Clients 1 and 3 rule!'
 
 
 def test_name_sending():
@@ -285,5 +301,5 @@ def test_name_sending():
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[1]['args'][0]['match'] == 'Anonymous'
-  assert data2[1]['args'][0]['match'] == 'Client 1'
+  assert data1[0]['args'][0]['match'] == 'Anonymous'
+  assert data2[0]['args'][0]['match'] == 'Client 1'
