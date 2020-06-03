@@ -293,6 +293,7 @@ def test_clients_arent_rematched():
   client1 = socketio.test_client(app, flask_test_client=flask_test_client)
   client2 = socketio.test_client(app, flask_test_client=flask_test_client)
   broadcaster = socketio.test_client(app, flask_test_client=flask_test_client)
+  room1 = f"room_{client1.sid}"
   room2 = f"room_{client2.sid}"
 
   client1.emit('join_group', {'access_code': 'test'})
@@ -305,11 +306,14 @@ def test_clients_arent_rematched():
   assert data2[-1]['args'] == 'Seeable'
 
   client1.emit('leave', {'room': room2, 'return_to': 'test'})
+  data2 = client2.get_received()
   client2.emit('leave', {'room': room2, 'return_to': 'test'})
+
+  broadcaster.emit('message', {'message': 'Unseeable', 'room': room1})
   broadcaster.emit('message', {'message': 'Unseeable', 'room': room2})
 
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[-1]['args'] != 'Unseeable'
-  assert data2[-1]['args'] != 'Unseeable'
+  assert data1 == []
+  assert data2 == []
