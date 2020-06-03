@@ -85,8 +85,8 @@ def matchmake(group):
     their_conn.waiting = False
     their_conn.last_match = my_conn.sid
     their_conn.save()
-    emit('join_room', {'room': room, 'user': my_conn.user_name, 'match': their_conn.user_name}, room=my_conn.sid)
-    emit('join_room', {'room': room, 'user': their_conn.user_name, 'match': my_conn.user_name}, room=their_conn.sid)
+    emit('join_room', {'room': room, 'user': my_conn.user_name, 'match': {'name':their_conn.user_name, 'sid':their_conn.sid}}, room=my_conn.sid)
+    emit('join_room', {'room': room, 'user': their_conn.user_name, 'match': {'name':my_conn.user_name, 'sid':my_conn.sid}}, room=their_conn.sid)
     send(f'{my_conn.user_name} connected.', room=room)
     return room
 
