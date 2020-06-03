@@ -10,4 +10,4 @@ COPY . ./
 
 ENV PORT 8080
 
-CMD exec gunicorn --bind :$PORT --workers=2 --threads=8 --timeout=0 --worker-class=eventlet --worker-class=gthread circle:app
+CMD exec gunicorn --bind :$PORT -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 circle:app
