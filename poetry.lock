@@ -108,20 +108,6 @@ IDNA = ["idna (>=2.1)"]
 
 [[package]]
 category = "main"
-description = "Highly concurrent networking library"
-name = "eventlet"
-optional = false
-python-versions = "*"
-version = "0.25.2"
-
-[package.dependencies]
-dnspython = ">=1.15.0"
-greenlet = ">=0.3"
-monotonic = ">=1.4"
-six = ">=1.10.0"
-
-[[package]]
-category = "main"
 description = "A simple framework for building complex web applications."
 name = "flask"
 optional = false
@@ -247,6 +233,7 @@ gevent = "*"
 [[package]]
 category = "main"
 description = "Lightweight in-process concurrent programming"
+marker = "platform_python_implementation == \"CPython\""
 name = "greenlet"
 optional = false
 python-versions = "*"
@@ -357,14 +344,6 @@ version = "0.20.0"
 
 [package.dependencies]
 pymongo = ">=3.4,<4.0"
-
-[[package]]
-category = "main"
-description = "An implementation of time.monotonic() for Python 2 & < 3.3"
-name = "monotonic"
-optional = false
-python-versions = "*"
-version = "1.5"
 
 [[package]]
 category = "main"
@@ -651,7 +630,7 @@ test = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [metadata]
-content-hash = "f6a67d8975811ce1d836b1cf513fc9da22f1f928531e6c32938d74c7fd013e2f"
+content-hash = "80ef1cbe132b1fc64beb81ba95324f2167b4bcba6021e91ddd60aeb3e87f5e19"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -748,10 +727,6 @@ coverage = [
 dnspython = [
     {file = "dnspython-1.16.0-py2.py3-none-any.whl", hash = "sha256:f69c21288a962f4da86e56c4905b49d11aba7938d3d740e80d9e366ee4f1632d"},
     {file = "dnspython-1.16.0.zip", hash = "sha256:36c5e8e38d4369a08b6780b7f27d790a292b2b08eea01607865bf0936c558e01"},
-]
-eventlet = [
-    {file = "eventlet-0.25.2-py2.py3-none-any.whl", hash = "sha256:955f2cf538829bfcb7b3aa885ace40e8ae5965dcd5b876c384d0c5869702db1d"},
-    {file = "eventlet-0.25.2.tar.gz", hash = "sha256:4c8ab42c51bff55204fef43cff32616558bedbc7538d876bb6a96ce820c7f9ed"},
 ]
 flask = [
     {file = "Flask-1.1.2-py2.py3-none-any.whl", hash = "sha256:8a4fdd8936eba2512e9c85df320a37e694c93945b33ef33c89946a340a238557"},
@@ -914,10 +889,6 @@ mccabe = [
 mongoengine = [
     {file = "mongoengine-0.20.0-py3-none-any.whl", hash = "sha256:6e127f45f71c2bc5e72461ec297a0c20f04c3ee0bf6dd869e336226e325db6ef"},
     {file = "mongoengine-0.20.0.tar.gz", hash = "sha256:db9e5d587e5d74e52851e0e4a53fd744725bfa9918ae6070139f5ba9c62c6edf"},
-]
-monotonic = [
-    {file = "monotonic-1.5-py2.py3-none-any.whl", hash = "sha256:552a91f381532e33cbd07c6a2655a21908088962bb8fa7239ecbcc6ad1140cc7"},
-    {file = "monotonic-1.5.tar.gz", hash = "sha256:23953d55076df038541e648a53676fb24980f7a1be290cdda21300b3bc21dfb0"},
 ]
 more-itertools = [
     {file = "more-itertools-8.3.0.tar.gz", hash = "sha256:558bb897a2232f5e4f8e2399089e35aecb746e1f9191b6584a151647e89267be"},
