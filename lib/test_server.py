@@ -285,8 +285,10 @@ def test_name_sending():
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[1]['args'][0]['match'] == 'Anonymous'
-  assert data2[1]['args'][0]['match'] == 'Client 1'
+  assert data1[1]['args'][0]['match']['name'] == 'Anonymous'
+  assert data1[1]['args'][0]['match']['sid'] == client2.sid
+  assert data2[1]['args'][0]['match']['name'] == 'Client 1'
+  assert data2[1]['args'][0]['match']['sid'] == client1.sid
 
 def test_clients_arent_rematched():
   flask_test_client = app.test_client()
