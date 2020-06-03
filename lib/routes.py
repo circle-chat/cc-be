@@ -66,9 +66,10 @@ def group_join(data):
 
 def matchmake(group):
   match = None
+  my_conn = Connection.objects(sid=request.sid).first()
   if len(Connection.objects(group=group, waiting=True)) > 1:
     for conn in Connection.objects(group=group, waiting=True):
-      if conn.sid != request.sid:
+      if conn.sid != request.sid and conn.sid != my_conn.last_match and conn.last_match != my_conn.sid:
         match = conn.sid
 
   if match:
@@ -77,15 +78,16 @@ def matchmake(group):
     join_room(sid=match, room=room)
     leave_room(room=group)
     leave_room(sid=match, room=group)
-    my_conn = Connection.objects(sid=request.sid).first()
     their_conn = Connection.objects(sid=match).first()
     my_conn.waiting = False
+    my_conn.last_match = their_conn.sid
     my_conn.save()
     their_conn.waiting = False
+    their_conn.last_match = my_conn.sid
     their_conn.save()
-    emit('join_room', {'room': room, 'user': my_conn.user_name, 'match': their_conn.user_name}, room=my_conn.sid)
-    emit('join_room', {'room': room, 'user': their_conn.user_name, 'match': my_conn.user_name}, room=their_conn.sid)
-    # send(f'{my_conn.user_name} connected.', room=room)
+    emit('join_room', {'room': room, 'user': my_conn.user_name, 'match': {'name':their_conn.user_name, 'sid':their_conn.sid}}, room=my_conn.sid)
+    emit('join_room', {'room': room, 'user': their_conn.user_name, 'match': {'name':my_conn.user_name, 'sid':my_conn.sid}}, room=their_conn.sid)
+    send(f'{my_conn.user_name} connected.', room=room)
     return room
 
 
