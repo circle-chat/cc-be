@@ -23,6 +23,7 @@ class Connection(me.Document):
   waiting = me.BooleanField(default=True)
   created = me.DateTimeField()
   user_name = me.StringField(default='Anonymous')
+  last_match = me.StringField()
   meta = {
       'auto_create_index': True,
       'index_opts': {'expireAfterSeconds': 43200},
