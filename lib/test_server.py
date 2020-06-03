@@ -285,5 +285,37 @@ def test_name_sending():
   data1 = client1.get_received()
   data2 = client2.get_received()
 
-  assert data1[1]['args'][0]['match'] == 'Anonymous'
-  assert data2[1]['args'][0]['match'] == 'Client 1'
+  assert data1[1]['args'][0]['match']['name'] == 'Anonymous'
+  assert data1[1]['args'][0]['match']['sid'] == client2.sid
+  assert data2[1]['args'][0]['match']['name'] == 'Client 1'
+  assert data2[1]['args'][0]['match']['sid'] == client1.sid
+
+def test_clients_arent_rematched():
+  flask_test_client = app.test_client()
+  client1 = socketio.test_client(app, flask_test_client=flask_test_client)
+  client2 = socketio.test_client(app, flask_test_client=flask_test_client)
+  broadcaster = socketio.test_client(app, flask_test_client=flask_test_client)
+  room1 = f"room_{client1.sid}"
+  room2 = f"room_{client2.sid}"
+
+  client1.emit('join_group', {'access_code': 'test'})
+  client2.emit('join_group', {'access_code': 'test'})
+  broadcaster.emit('message', {'message': 'Seeable', 'room': room2})
+  data1 = client1.get_received()
+  data2 = client2.get_received()
+
+  assert data1[-1]['args'] == 'Seeable'
+  assert data2[-1]['args'] == 'Seeable'
+
+  client1.emit('leave', {'room': room2, 'return_to': 'test'})
+  data2 = client2.get_received()
+  client2.emit('leave', {'room': room2, 'return_to': 'test'})
+
+  broadcaster.emit('message', {'message': 'Unseeable', 'room': room1})
+  broadcaster.emit('message', {'message': 'Unseeable', 'room': room2})
+
+  data1 = client1.get_received()
+  data2 = client2.get_received()
+
+  assert data1 == []
+  assert data2 == []
