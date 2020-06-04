@@ -3,6 +3,9 @@
 # The Circle BE  
 ---
 ## Description  
+The Circle is a lightweight online chat website that randomly matches two people from a closed group together to have a one-on-one chat.  These groups can exist for an organization, a collective shared interest, or just about anything else. Our vision is to strengthen communities by fostering relationships between members of a circle who wouldn't normally take the time to chat and connect with each other.
+
+The Circle is committed to privacy.  Groups auto expire after a certain time frame and no private user information is ever stored.
 
 ##### The live version of the full project is available at: https://circle-fe-jcg5wby7mq-uc.a.run.app/
 
