@@ -12,8 +12,10 @@ The Circle is committed to privacy.  Groups auto expire after a certain time fra
 
 ## Back-end Tech Stack
 
-### Python / Flask
+### Python / Flask / Socket.io
 The decision to use the Flask framework for Python came from the challenge of learning new language in a set amount of time.  Flask and its many libraries are very well documented which allowed for rapid development on the backend.  Flask and Pytest also work seamlessly together which enable near 100% test coverage.
+
+Socket.io was fundamental in this app due to the design of a real-time, bi-directional, and event based communication between the client and server.
 
 ### MongoDB Atlas
 MongoDB was used for this application due its ease in fast and agile development when working with none relational data.  MongoDB is a document style NoSQL database which makes indexing, searching, and calling data very quick from both frontend and backend.
