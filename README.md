@@ -22,7 +22,7 @@ Circle CI is a very user friendly Continuous Intergration platform that uses a s
 Docker made managing the different contributors local setups with the many versions of Python and its libraries painless.  It also enabled very quick intergrated of new features and bug fixes to the deployed production server.
 
 ### Google Cloud Platform / CloudRun
-Google
+Google Cloud Platform and its CloudRun service for its ease of use in deploying Docker containers.  It also has built in security with automatic SSL and TLS.  Additionally, it allows for serverless deployment and is available to the end user very quickly.
 
 <img width="668" alt="Screen Shot 2020-06-04 at 2 22 41 PM" src="https://user-images.githubusercontent.com/10391857/83806630-0d1ff400-a66f-11ea-82a7-9b012f421631.png">
 
@@ -106,6 +106,12 @@ Groups are set to expire automatically after three days.
 ![Screen Shot 2020-06-04 at 2 43 35 PM](https://user-images.githubusercontent.com/56602822/83803363-06df4700-a672-11ea-95c5-c163fd47be7b.png)
 
 Connections are deleted automatically when a client disconnections but a fail safe is also in place that they delete after a set period of time as well.
+
+---
+## Learning Goals  
+ [x] Implement a series of never before used technologies against a tight deadline.
+ [x] Develop using Agile work practices include Asana Project Board, Scrum Standups, User Story Grooming, etc.
+ [x] Maintain developer empathy when working across frontend and backend teams.
 
 ---
 ## Project Collaborators  
