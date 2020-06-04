@@ -40,6 +40,22 @@ This is return the following JSON object if done correctly
 
 ![Screen Shot 2020-06-01 at 12 34 23 PM-1](https://user-images.githubusercontent.com/56602822/83800119-89650800-a66c-11ea-84f1-bbd539cf4fb7.png)
 
+#### GET to '/groups'  
+The GET method to /groups will return all the current groups in the database in the above formating
+
+---
+The second way to interact with the server is through websocket events.
+
+#### Join Group
+The join group event handles opening a websocket from client to server as well as giving the client access to a specific group.  The event should emit a json payload with the following key values:
+
+  * access_code - This is the access code for the group.  This is used almost as a password into the group.
+  * name - The name the user has input.
+  
+When a user joins a group they wait in a lobby for another client to connect to the same group.  When there is another connection (or more then 2) the users are randomly assigned into chat rooms.  This is done through the server emitting a 'join_room' event.
+
+<img width="830" alt="Screen Shot 2020-06-04 at 2 28 03 PM" src="https://user-images.githubusercontent.com/56602822/83801999-a6e7a100-a66f-11ea-926e-c9feb8e65cc7.png">
+
 
 ---
 ## Project Collaborators  
