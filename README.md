@@ -7,13 +7,13 @@
 ##### The live version of the full project is available at: https://circle-fe-jcg5wby7mq-uc.a.run.app/
 
 
-## Back-end Code
+## Back-end Tech Stack
 
 
 ---
 ## Local Setup 
-- Clone this repo to your local machine with: ``
-- cd into the directory
+- Clone this repo to your local machine with: `git@github.com:circle-chat/cc-be.git`
+- CD into the directory
 - Install Poetry (instructions available at https://python-poetry.org/docs/)
   - Alternatively use your favorite python package manager like pip (a requirements.txt file is included)
 - Start a Python Virtual Environment with `poety shell`
