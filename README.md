@@ -37,6 +37,13 @@ Google Cloud Platform and its CloudRun service for its ease of use in deploying 
 - Install MongoDB - Community 4.2 Edition (instructions available at https://docs.mongodb.com/manual/installation/)
 - Make sure the Mongo service is running `brew services start mongodb-community@4.2`
 - To start the server in development use `flask run`
+- This hosts the server at `localhost:5000`
+
+### Alternatively:
+- Pull down the Docker image `docker pull iev0lv3/circle:the_one`
+- Run the docker image `docker run -dp 8080:8080 iev0lv3/circle:the_one`
+- This hosts the server at `localhost:8080`
+
 
 ---
 ## Interacting with the Server
@@ -109,9 +116,9 @@ Connections are deleted automatically when a client disconnections but a fail sa
 
 ---
 ## Learning Goals  
- [x] Implement a series of never before used technologies against a tight deadline.
- [x] Develop using Agile work practices include Asana Project Board, Scrum Standups, User Story Grooming, etc.
- [x] Maintain developer empathy when working across frontend and backend teams.
+ - [x] Implement a series of never before used technologies against a tight deadline.
+ - [x] Develop using Agile work practices include Asana Project Board, Scrum Standups, User Story Grooming, etc.
+ - [x] Maintain developer empathy when working across frontend and backend teams.
 
 ---
 ## Project Collaborators  
