@@ -25,6 +25,7 @@ Docker made managing the different contributors local setups with the many versi
 Google
 
 <img width="668" alt="Screen Shot 2020-06-04 at 2 22 41 PM" src="https://user-images.githubusercontent.com/10391857/83806630-0d1ff400-a66f-11ea-82a7-9b012f421631.png">
+
 ---
 ## Local Setup 
 - Clone this repo to your local machine with: `git@github.com:circle-chat/cc-be.git`
