@@ -15,6 +15,9 @@ The Circle is committed to privacy.  Groups auto expire after a certain time fra
 ### Python / Flask
 The decision to use the Flask framework for Python came from the challenge of learning new language in a set amount of time.  Flask and its many libraries are very well documented which allowed for rapid development on the backend.  Flask and Pytest also work seamlessly together which enable near 100% test coverage.
 
+### MongoDB Atlas
+MongoDB was used for this application due its ease in fast and agile development when working with none relational data.  MongoDB is a document style NoSQL database which makes indexing, searching, and calling data very quick from both frontend and backend.
+
 ### Circle CI
 Circle CI is a very user friendly Continuous Intergration platform that uses a simple config file and is able to connect with github to make sure each Pull Request is tested prior to merging with the Production Branch
 
@@ -40,6 +43,7 @@ Google Cloud Platform and its CloudRun service for its ease of use in deploying 
 - This hosts the server at `localhost:5000`
 
 ### Alternatively:
+- Follow above directions for MongoDB
 - Pull down the Docker image `docker pull iev0lv3/circle:the_one`
 - Run the docker image `docker run -dp 8080:8080 iev0lv3/circle:the_one`
 - This hosts the server at `localhost:8080`
@@ -70,30 +74,30 @@ The GET method to /groups will return all the current groups in the database in 
 The second way to interact with the server is through websocket events.
 
 #### Join Group
-The join group event handles opening a websocket from client to server as well as giving the client access to a specific group.  The event should emit a json payload with the following key values:
+The `join_group` event handles opening a websocket from client to server as well as giving the client access to a specific group.  The event should emit a json payload with the following key values:
 
-  * access_code - This is the access code for the group.  This is used almost as a password into the group.
-  * name - The name the user has input.
+  * `access_code` - This is the access code for the group.  This is used almost as a password into the group.
+  * `name` - The name the user has input.
   
-When a user joins a group they wait in a lobby for another client to connect to the same group.  This information is briefly stored in the database for use in matchmaking.  When there is another connection (or more then 2) the users are randomly assigned into chat rooms.  This is done through the server emitting a 'join_room' event.
+When a user joins a group they wait in a lobby for another client to connect to the same group.  This information is briefly stored in the database for use in matchmaking.  When there is another connection (or more then 2) the users are randomly assigned into chat rooms.  This is done through the server emitting a `join_room` event.
 
 <img width="830" alt="Screen Shot 2020-06-04 at 2 28 03 PM" src="https://user-images.githubusercontent.com/56602822/83801999-a6e7a100-a66f-11ea-926e-c9feb8e65cc7.png">
 
-Users are randomly paired with others in the same group.  The last socket client a user matched with is stored so that they are matched with the same person twice in a row.
+Users are randomly paired with others in the same group.  The last socket client a user matched with is stored so that they aren't matched with the same person twice in a row.
 
-The emitted 'join_room' event has this following data:
+The emitted `join_room` event has this following data:
 
-  * room - This is the room they are connecting too.  (Stored in the client)
-  * user - Their username
-  * match - This data has two pieces.  The first is the second user's name and the second piece is that users socket id.
+  * `room` - This is the room they are connecting too.  (Stored in the client)
+  * `user` - Their username
+  * `match` - This data has two pieces.  The first is the second user's name and the second piece is that users socket id.
   
 
 #### Message
 The message event handles the sending of messages to the server and back out to the connected sockets in that room.  The payload that comes through only has one requirement but more key values can be send as needed by the client.
 
-  * room - This is the room that the message is to be emitted to. (Recieved from above)
+  * `room` - This is the room that the message is to be emitted to. (Recieved from above)
   
-Any additional key value pairs are pass back to the two clients connected to that room.
+Any additional key value pairs are passed back to the two clients connected to that room.
 
 #### Leave Room
 When this event is triggered the connection is severed and the connection is removed from the database.
@@ -112,7 +116,7 @@ Groups are set to expire automatically after three days.
 ### Connections
 ![Screen Shot 2020-06-04 at 2 43 35 PM](https://user-images.githubusercontent.com/56602822/83803363-06df4700-a672-11ea-95c5-c163fd47be7b.png)
 
-Connections are deleted automatically when a client disconnections but a fail safe is also in place that they delete after a set period of time as well.
+Connections are deleted automatically when a client disconnects but a fail safe is also in place that they delete after a set period of time as well.
 
 ---
 ## Learning Goals  
