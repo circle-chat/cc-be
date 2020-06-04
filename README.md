@@ -12,14 +12,26 @@ The Circle is committed to privacy.  Groups auto expire after a certain time fra
 
 ## Back-end Tech Stack
 
+### Python / Flask
+The decision to use the Flask framework for Python came from the challenge of learning new language in a set amount of time.  Flask and its many libraries are very well documented which allowed for rapid development on the backend.  Flask and Pytest also work seamlessly together which enable near 100% test coverage.
 
+### Circle CI
+Circle CI is a very user friendly Continuous Intergration platform that uses a simple config file and is able to connect with github to make sure each Pull Request is tested prior to merging with the Production Branch
+
+### Docker
+Docker made managing the different contributors local setups with the many versions of Python and its libraries painless.  It also enabled very quick intergrated of new features and bug fixes to the deployed production server.
+
+### Google Cloud Platform / CloudRun
+Google
+
+<img width="668" alt="Screen Shot 2020-06-04 at 2 22 41 PM" src="https://user-images.githubusercontent.com/10391857/83806630-0d1ff400-a66f-11ea-82a7-9b012f421631.png">
 ---
 ## Local Setup 
 - Clone this repo to your local machine with: `git@github.com:circle-chat/cc-be.git`
 - CD into the directory
 - Install Poetry (instructions available at https://python-poetry.org/docs/)
   - Alternatively use your favorite python package manager like pip (a requirements.txt file is included)
-- Start a Python Virtual Environment with `poety shell`
+- Start a Python Virtual Environment with `poetry shell`
 - RUN `poetry install`
 - Install MongoDB - Community 4.2 Edition (instructions available at https://docs.mongodb.com/manual/installation/)
 - Make sure the Mongo service is running `brew services start mongodb-community@4.2`
