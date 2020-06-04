@@ -76,6 +76,22 @@ Any additional key value pairs are pass back to the two clients connected to tha
 When this event is triggered the connection is severed and the connection is removed from the database.
 
 ---
+## Database Schema
+The Database used for this application is MongoDB due its ease in fast and agile development when working with none relational data.
+
+There are two collections in the Database: Groups and Connections
+
+### Groups
+![Screen Shot 2020-06-04 at 2 43 19 PM](https://user-images.githubusercontent.com/56602822/83803297-efa05980-a671-11ea-8ba8-5e273d677fa0.png)
+
+Groups are set to expire automatically after three days.
+
+### Connections
+![Screen Shot 2020-06-04 at 2 43 35 PM](https://user-images.githubusercontent.com/56602822/83803363-06df4700-a672-11ea-95c5-c163fd47be7b.png)
+
+Connections are deleted automatically when a client disconnections but a fail safe is also in place that they delete after a set period of time as well.
+
+---
 ## Project Collaborators  
 * David Atkins - https://github.com/d-atkins
 * Jordan Williams - https://github.com/iEv0lv3
