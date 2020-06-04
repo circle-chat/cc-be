@@ -52,10 +52,33 @@ The join group event handles opening a websocket from client to server as well a
   * access_code - This is the access code for the group.  This is used almost as a password into the group.
   * name - The name the user has input.
   
-When a user joins a group they wait in a lobby for another client to connect to the same group.  When there is another connection (or more then 2) the users are randomly assigned into chat rooms.  This is done through the server emitting a 'join_room' event.
+When a user joins a group they wait in a lobby for another client to connect to the same group.  This information is briefly stored in the database for use in matchmaking.  When there is another connection (or more then 2) the users are randomly assigned into chat rooms.  This is done through the server emitting a 'join_room' event.
 
 <img width="830" alt="Screen Shot 2020-06-04 at 2 28 03 PM" src="https://user-images.githubusercontent.com/56602822/83801999-a6e7a100-a66f-11ea-926e-c9feb8e65cc7.png">
 
+Users are randomly paired with others in the same group.  The last socket client a user matched with is stored so that they are matched with the same person twice in a row.
+
+The emitted 'join_room' event has this following data:
+
+  * room - This is the room they are connecting too.  (Stored in the client)
+  * user - Their username
+  * match - This data has two pieces.  The first is the second user's name and the second piece is that users socket id.
+  
+
+#### Message
+The message event handles the sending of messages to the server and back out to the connected sockets in that room.  The payload that comes through only has one requirement but more key values can be send as needed by the client.
+
+  * room - This is the room that the message is to be emitted to. (Recieved from above)
+  
+Any additional key value pairs are pass back to the two clients connected to that room.
+
+#### Leave Room
+When this event is triggered the connection is severed and the connection is removed from the database.
 
 ---
 ## Project Collaborators  
+* David Atkins - https://github.com/d-atkins
+* Jordan Williams - https://github.com/iEv0lv3
+* Ryan Allen - https://github.com/rcallen89
+* Kyle Barnett - https://github.com/KmBarnett
+* Ezekiel Clark - https://github.com/Yetidancer
