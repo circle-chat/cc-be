@@ -26,7 +26,7 @@ Circle CI is a very user friendly Continuous Intergration platform that uses a s
 ### Docker
 Docker made managing the different contributors local setups with the many versions of Python and its libraries painless.  It also enabled very quick intergrated of new features and bug fixes to the deployed production server.
 
-### Google Cloud Platform / CloudRun
+### Google Cloud Platform / Cloud Run
 Google Cloud Platform and its CloudRun service for its ease of use in deploying Docker containers.  It also has built in security with automatic SSL and TLS.  Additionally, it allows for serverless deployment and is available to the end user very quickly.
 
 <img width="662" alt="Screen Shot 2020-06-05 at 8 22 47 AM" src="https://user-images.githubusercontent.com/10391857/83890864-9552d780-a709-11ea-8f2d-13e08a12f416.png">
