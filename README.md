@@ -29,7 +29,7 @@ Docker made managing the different contributors local setups with the many versi
 ### Google Cloud Platform / CloudRun
 Google Cloud Platform and its CloudRun service for its ease of use in deploying Docker containers.  It also has built in security with automatic SSL and TLS.  Additionally, it allows for serverless deployment and is available to the end user very quickly.
 
-<img width="668" alt="Screen Shot 2020-06-04 at 2 22 41 PM" src="https://user-images.githubusercontent.com/10391857/83806630-0d1ff400-a66f-11ea-82a7-9b012f421631.png">
+<img width="662" alt="Screen Shot 2020-06-05 at 8 22 47 AM" src="https://user-images.githubusercontent.com/10391857/83890864-9552d780-a709-11ea-8f2d-13e08a12f416.png">
 
 ---
 ## Local Setup 
@@ -61,8 +61,6 @@ The back-end server has two ways to interact with it.  First, through common API
 #### POST to '/groups'
 The POST method to /groups should contain json information for the following:
 
-<<<<<<< HEAD
-=======
  * Name - Title for the group. (*)
  * Description - A short discription for the group. (*)
  * Rules - A single string of rules for the group.
@@ -70,7 +68,6 @@ The POST method to /groups should contain json information for the following:
 This is return the following JSON object if done correctly
 
 ![Screen Shot 2020-06-01 at 12 34 23 PM-1](https://user-images.githubusercontent.com/56602822/83800119-89650800-a66c-11ea-84f1-bbd539cf4fb7.png)
->>>>>>> 718f8f8a73d1ab92f1de626efd6a6cdaff40f79e
 
 #### GET to '/groups'  
 The GET method to /groups will return all the current groups in the database in the above formating
