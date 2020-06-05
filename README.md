@@ -61,6 +61,16 @@ The back-end server has two ways to interact with it.  First, through common API
 #### POST to '/groups'
 The POST method to /groups should contain json information for the following:
 
+<<<<<<< HEAD
+=======
+ * Name - Title for the group. (*)
+ * Description - A short discription for the group. (*)
+ * Rules - A single string of rules for the group.
+ 
+This is return the following JSON object if done correctly
+
+![Screen Shot 2020-06-01 at 12 34 23 PM-1](https://user-images.githubusercontent.com/56602822/83800119-89650800-a66c-11ea-84f1-bbd539cf4fb7.png)
+>>>>>>> 718f8f8a73d1ab92f1de626efd6a6cdaff40f79e
 
 #### GET to '/groups'  
 The GET method to /groups will return all the current groups in the database in the above formating
