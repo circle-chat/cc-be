@@ -18,7 +18,7 @@ The decision to use the Flask framework for Python came from the challenge of le
 Socket.io was fundamental in this app due to the design of a real-time, bi-directional, and event based communication between the client and server.
 
 ### MongoDB Atlas
-MongoDB was used for this application due its ease in fast and agile development when working with none relational data.  MongoDB is a document style NoSQL database which makes indexing, searching, and calling data very quick from both frontend and backend.
+MongoDB was used for this application due its ease in fast and agile development when working with non-relational data.  MongoDB is a document style NoSQL database which makes indexing, searching, and calling data extremely fast from both frontend and backend.
 
 ### Circle CI
 Circle CI is a very user friendly Continuous Intergration platform that uses a simple config file and is able to connect with github to make sure each Pull Request is tested prior to merging with the Production Branch
